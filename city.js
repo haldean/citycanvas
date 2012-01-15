@@ -2,16 +2,26 @@ var window_width = 6;
 var window_height = 10;
 var window_padding = 3;
 
+// Return a string representing the given rgb values.
 function rgbColor3f(r, g, b) {
-  return "rgb(" + Math.round(r * 255) + ","
+  return "rgba(" + Math.round(r * 255) + ","
     + Math.round(g * 255) + ","
-    + Math.round(b * 255) + ")";
+    + Math.round(b * 255) + ", 1)";
 }
 
+// Return a string representing the given rgba values.
+function rgbaColor3f(r, g, b, a) {
+  return "rgba(" + Math.round(r * 255) + ","
+    + Math.round(g * 255) + ","
+    + Math.round(b * 255) + "," + a + ")";
+}
+
+// Format a color based on a list of [r, g, b]
 function rgbColor3fv(v) {
   return rgbColor3f(v[0], v[1], v[2]);
 }
 
+// Add some random amount of c2 into c1.
 function randomContr(c1, c2, maxContr) {
   contr = Math.random() * maxContr;
   return _.map(_.zip(c1, c2), function(c) {
@@ -102,6 +112,7 @@ function draw() {
     }
   }
 
+  // Draw window colors to screen
   for (var wi = 0; wi < windows_x; wi++) {
     for (var wj = 0; wj < windows_y; wj++) {
       ctx.fillStyle = rgbColor3fv(windows[wi][wj]);
@@ -110,6 +121,28 @@ function draw() {
           wj * (window_height + window_padding) + window_padding,
           window_width,
           window_height);
+    }
+  }
+
+  // Draw some bits in the windows that are on
+  ctx.fillStyle = "rgba(0, 0, 0, .5)";
+  console.log(ctx.fillStyle);
+
+  for (var wi = 0; wi < windows_x; wi++) {
+    for (var wj = 0; wj < windows_y; wj++) {
+      if (windows_on[wi][wj]) {
+        while (Math.random() < .4) {
+          var rect_height = Math.random() * Math.random() * window_height * .95;
+          var rect_width = Math.random() * window_width * .8;
+          var x_offset = Math.random() * (window_width - rect_width);
+          var y_offset = window_height - rect_height;
+          ctx.fillRect(
+              wi * (window_width + window_padding) + window_padding + x_offset,
+              wj * (window_height + window_padding) + window_padding + y_offset,
+              rect_width,
+              rect_height);
+        }
+      }
     }
   }
 }
