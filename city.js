@@ -1,6 +1,6 @@
 var window_width = 6;
 var window_height = 6;
-var window_padding = 3;
+var window_padding = 2;
 
 // Return a string representing the given rgb values.
 function rgbColor3f(r, g, b) {
