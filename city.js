@@ -1,5 +1,5 @@
 var window_width = 6;
-var window_height = 10;
+var window_height = 6;
 var window_padding = 3;
 
 // Return a string representing the given rgb values.
@@ -35,6 +35,8 @@ function draw() {
     alert('Canvas not supported!');
     return;
   }
+  canvas.setAttribute('width', window.innerWidth);
+  canvas.setAttribute('height', window.innerHeight);
 
   var ctx = canvas.getContext('2d');
   var w = parseInt(canvas.getAttribute('width'));
@@ -77,9 +79,9 @@ function draw() {
   for (var wi = 0; wi < windows_x; wi++) {
     windows[wi] = [];
     for (var wj = 0; wj < windows_y; wj++) {
-      var r = .08;
-      var g = .08;
-      var b = .12;
+      var r = .12 * Math.random();
+      var g = r;
+      var b = r;
 
       if (windows_on[wi][wj]) {
         if (wi > 0 && windows_on[wi-1][wj]) {
@@ -124,14 +126,32 @@ function draw() {
     }
   }
 
-  // Draw some bits in the windows that are on
-  ctx.fillStyle = "rgba(0, 0, 0, .5)";
-  console.log(ctx.fillStyle);
+  // Shade the windows with a linear gradient
+  for (var wj = 0; wj < windows_y; wj++) {
+    var shade_gradient = ctx.createLinearGradient(
+        0, wj * (window_height + window_padding) + window_padding,
+        0, (wj + 1) * (window_height + window_padding));
 
+    shade_gradient.addColorStop(0, rgbaColor3f(0, 0, 0, 0));
+    shade_gradient.addColorStop(1, rgbaColor3f(0, 0, 0, .4));
+    ctx.fillStyle = shade_gradient;
+
+    for (var wi = 0; wi < windows_x; wi++) {
+      ctx.fillRect(
+          wi * (window_width + window_padding) + window_padding,
+          wj * (window_height + window_padding) + window_padding,
+          window_width,
+          window_height);
+    }
+  }
+
+  // Draw some bits in the windows that are on
   for (var wi = 0; wi < windows_x; wi++) {
     for (var wj = 0; wj < windows_y; wj++) {
-      if (windows_on[wi][wj]) {
-        while (Math.random() < .4) {
+      if (true || windows_on[wi][wj]) {
+        while (Math.random() < .8) {
+          ctx.fillStyle = rgbaColor3f(0, 0, 0, Math.random() * .6 + .3);
+
           var rect_height = Math.random() * Math.random() * window_height * .95;
           var rect_width = Math.random() * window_width * .8;
           var x_offset = Math.random() * (window_width - rect_width);
@@ -142,6 +162,25 @@ function draw() {
               rect_width,
               rect_height);
         }
+      }
+    }
+  }
+
+  // Add some random color noise to each window
+  return;
+  for (var wi = 0; wi < windows_x; wi++) {
+    for (var wj = 0; wj < windows_y; wj++) {
+      while (Math.random() < .95) {
+        ctx.fillStyle =
+          rgbaColor3f(
+              Math.random(), Math.random(), Math.random(), .2 * Math.random());
+
+        var x_offset = Math.random() * (window_width - 1);
+        var y_offset = Math.random() * (window_height - 1);
+        ctx.fillRect(
+            wi * (window_width + window_padding) + window_padding + x_offset,
+            wj * (window_height + window_padding) + window_padding + y_offset,
+            1, 1);
       }
     }
   }
