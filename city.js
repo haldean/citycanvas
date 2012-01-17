@@ -165,23 +165,4 @@ function draw() {
       }
     }
   }
-
-  // Add some random color noise to each window
-  return;
-  for (var wi = 0; wi < windows_x; wi++) {
-    for (var wj = 0; wj < windows_y; wj++) {
-      while (Math.random() < .95) {
-        ctx.fillStyle =
-          rgbaColor3f(
-              Math.random(), Math.random(), Math.random(), .2 * Math.random());
-
-        var x_offset = Math.random() * (window_width - 1);
-        var y_offset = Math.random() * (window_height - 1);
-        ctx.fillRect(
-            wi * (window_width + window_padding) + window_padding + x_offset,
-            wj * (window_height + window_padding) + window_padding + y_offset,
-            1, 1);
-      }
-    }
-  }
 }
