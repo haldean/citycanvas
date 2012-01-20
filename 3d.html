@@ -1,0 +1,104 @@
+<html>
+  <head>
+    <title>citycanvas</title>
+  </head>
+
+  <body>
+    <canvas id="citytexture" style="display:none;"></canvas>
+
+    <script type="text/javascript" src="underscore-min.js"></script>
+    <script type="text/javascript" src="city.js"></script>
+    <script type="text/javascript" src="three.js"></script>
+    <script>
+      var camera, scene, crenderer, wrenderer, material, controls;
+
+      init();
+      animate();
+
+      function black(side) {
+        var canvas = document.createElement('canvas');
+        canvas.setAttribute('width', side + 'px');
+        canvas.setAttribute('height', side + 'px');
+
+        var ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#000011';
+        ctx.fillRect(0, 0, side, side);
+        return canvas;
+      }
+
+      function imageTexture(canvas) {
+        return new THREE.MeshBasicMaterial({
+          map: new THREE.Texture(canvas)
+        });
+      }
+
+      function building_cube(w, h) {
+        var sides = [];
+        for (var i = 0; i < 6; i++) {
+          sides[i] = i == 2 || i == 3
+            ? imageTexture(black(w)) : imageTexture(cityTexture(w, h));
+        }
+        return sides;
+      }
+
+      function init() {
+        scene = new THREE.Scene();
+
+        camera = new THREE.PerspectiveCamera(
+          40, window.innerWidth / window.innerHeight, 1, 10000);
+        camera.position.y = 400;
+        camera.position.z = 2000;
+        scene.add(camera);
+        
+        controls = new THREE.TrackballControls(camera);
+
+				controls.rotateSpeed = 1.0;
+				controls.zoomSpeed = 1.2;
+				controls.panSpeed = 0.8;
+
+				controls.noZoom = false;
+				controls.noPan = false;
+
+        var h_max = 500;
+        for (var i = 0; i < 5; i++) {
+          for (var j = 0; j < 5; j++) {
+            var w = 200;
+            var h = (Math.random() * .7 + .3) * h_max;
+            var geometry =
+              new THREE.CubeGeometry(w, h, w, 1, 1, 1, building_cube(w, h));
+
+            var mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial());
+            mesh.position.set(
+            (w + 40) * (i - 2),
+            (h_max - h) / -2,
+            (w + 40) * (j - 2));
+            mesh.updateMatrix();
+            mesh.matrixAutoUpdate = false;
+
+            scene.add(mesh);
+          }
+        }
+
+        crenderer = new THREE.CanvasRenderer();
+        crenderer.setSize( window.innerWidth, window.innerHeight );
+        document.body.appendChild(crenderer.domElement);
+
+        wrenderer = new THREE.WebGLRenderer();
+        wrenderer.setSize( window.innerWidth, window.innerHeight );
+        document.body.appendChild(wrenderer.domElement);
+      }
+
+      function animate() {
+        requestAnimationFrame(animate);
+        render();
+      }
+
+      function render() {
+        controls.update();
+        crenderer.render(scene, camera);
+        wrenderer.render(scene, camera);
+      }
+
+    </script>
+  </body>
+</html>

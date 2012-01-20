@@ -30,17 +30,20 @@ function randomContr(c1, c2, maxContr) {
 }
 
 function draw() {
-  var canvas = document.getElementById('canvas');
+  document.body.appendChild(cityTexture(
+        window.innerWidth, window.innerHeight));
+}
+
+function cityTexture(w, h) {
+  var canvas = document.createElement('canvas');
+  canvas.setAttribute('width', w + 'px');
+  canvas.setAttribute('height', h + 'px');
+
   if (!canvas.getContext) {
     alert('Canvas not supported!');
     return;
   }
-  canvas.setAttribute('width', window.innerWidth);
-  canvas.setAttribute('height', window.innerHeight);
-
   var ctx = canvas.getContext('2d');
-  var w = parseInt(canvas.getAttribute('width'));
-  var h = parseInt(canvas.getAttribute('height'));
 
   ctx.fillStyle = "#000011";
   ctx.fillRect(0, 0, w, h);
@@ -165,4 +168,6 @@ function draw() {
       }
     }
   }
+
+  return canvas;
 }
