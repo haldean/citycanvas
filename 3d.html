@@ -60,18 +60,20 @@
 				controls.noPan = false;
 
         var h_max = 500;
-        for (var i = 0; i < 5; i++) {
-          for (var j = 0; j < 5; j++) {
-            var w = 200;
-            var h = (Math.random() * .7 + .3) * h_max;
+        var buildings_per_side = 3;
+        var building_offset = Math.floor(buildings_per_side / 2);
+        for (var i = 0; i < buildings_per_side; i++) {
+          for (var j = 0; j < buildings_per_side; j++) {
+            var w = 256;
+            var h = 256; //(Math.random() * .7 + .3) * h_max;
             var geometry =
               new THREE.CubeGeometry(w, h, w, 1, 1, 1, building_cube(w, h));
 
             var mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial());
             mesh.position.set(
-            (w + 40) * (i - 2),
+            (w + 40) * (i - building_offset),
             (h_max - h) / -2,
-            (w + 40) * (j - 2));
+            (w + 40) * (j - building_offset));
             mesh.updateMatrix();
             mesh.matrixAutoUpdate = false;
 
