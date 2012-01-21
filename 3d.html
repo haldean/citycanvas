@@ -65,7 +65,7 @@
         for (var i = 0; i < buildings_per_side; i++) {
           for (var j = 0; j < buildings_per_side; j++) {
             var w = 256;
-            var h = 256; //(Math.random() * .7 + .3) * h_max;
+            var h = (Math.random() * .7 + .3) * h_max;
             var geometry =
               new THREE.CubeGeometry(w, h, w, 1, 1, 1, building_cube(w, h));
 
