@@ -30,8 +30,9 @@ function randomContr(c1, c2, maxContr) {
 }
 
 function draw() {
-  document.body.appendChild(cityTexture(
-        window.innerWidth, window.innerHeight));
+  var canvas = cityTexture(window.innerWidth, window.innerHeight);
+  document.body.appendChild(canvas);
+  //Canvas2Image.saveAsPNG(canvas);
 }
 
 function cityTexture(w, h) {
