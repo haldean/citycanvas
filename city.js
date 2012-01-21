@@ -30,12 +30,18 @@ function randomContr(c1, c2, maxContr) {
 }
 
 function draw() {
-  var canvas = cityTexture(window.innerWidth, window.innerHeight);
+  var on_color = [
+    Math.random() * .3 + .7,
+    0,
+    Math.random() * .3 + .7];
+  on_color[1] = on_color[2];
+
+  var canvas = cityTexture(window.innerWidth, window.innerHeight, on_color);
   document.body.appendChild(canvas);
   //Canvas2Image.saveAsPNG(canvas);
 }
 
-function cityTexture(w, h) {
+function cityTexture(w, h, on_color) {
   var canvas = document.createElement('canvas');
   canvas.setAttribute('width', w + 'px');
   canvas.setAttribute('height', h + 'px');
@@ -83,23 +89,12 @@ function cityTexture(w, h) {
   for (var wi = 0; wi < windows_x; wi++) {
     windows[wi] = [];
     for (var wj = 0; wj < windows_y; wj++) {
-      var r = .12 * Math.random();
-      var g = r;
-      var b = r;
-
       if (windows_on[wi][wj]) {
-        if (wi > 0 && windows_on[wi-1][wj]) {
-          r = windows[wi-1][wj][0];
-          g = windows[wi-1][wj][1];
-          b = windows[wi-1][wj][2];
-        } else {
-          r = .7 + Math.random() * .3;
-          g = r;
-          b = .7 + Math.random() * .3;
-        }
+        windows[wi][wj] = on_color;
+      } else {
+        var l = .12 * Math.random();
+        windows[wi][wj] = [l, l, l];
       }
-
-      windows[wi][wj] = [r, g, b];
     }
   }
 
