@@ -4,13 +4,11 @@
   </head>
 
   <body>
-    <canvas id="citytexture" style="display:none;"></canvas>
-
     <script type="text/javascript" src="underscore-min.js"></script>
     <script type="text/javascript" src="city.js"></script>
     <script type="text/javascript" src="three.js"></script>
     <script>
-      var camera, scene, crenderer, wrenderer, material, controls;
+      var camera, scene, wrenderer, material, controls;
 
       init();
       animate();
@@ -27,9 +25,11 @@
       }
 
       function imageTexture(canvas) {
-        return new THREE.MeshBasicMaterial({
+        var material = new THREE.MeshBasicMaterial({
           map: new THREE.Texture(canvas)
         });
+        material.map.needsUpdate = true;
+        return material;
       }
 
       function building_cube(w, h) {
@@ -71,19 +71,16 @@
 
             var mesh = new THREE.Mesh(geometry, new THREE.MeshFaceMaterial());
             mesh.position.set(
-            (w + 40) * (i - building_offset),
-            (h_max - h) / -2,
-            (w + 40) * (j - building_offset));
+              (w + 40) * (i - building_offset),
+              (h_max - h) / -2,
+              (w + 40) * (j - building_offset));
+            mesh.dynamic = true;
             mesh.updateMatrix();
             mesh.matrixAutoUpdate = false;
 
             scene.add(mesh);
           }
         }
-
-        crenderer = new THREE.CanvasRenderer();
-        crenderer.setSize( window.innerWidth, window.innerHeight );
-        document.body.appendChild(crenderer.domElement);
 
         wrenderer = new THREE.WebGLRenderer();
         wrenderer.setSize( window.innerWidth, window.innerHeight );
@@ -97,7 +94,6 @@
 
       function render() {
         controls.update();
-        crenderer.render(scene, camera);
         wrenderer.render(scene, camera);
       }
 
